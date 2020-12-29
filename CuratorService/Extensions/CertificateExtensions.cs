@@ -2,7 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace curator
+namespace CuratorService.Extensions
 {
     internal static class CertificateExtensions
     {

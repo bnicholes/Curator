@@ -1,5 +1,6 @@
-﻿
-namespace curator.Data
+﻿#pragma warning disable 1591
+
+namespace CuratorService.Data
 {
     public interface ISetting
     {

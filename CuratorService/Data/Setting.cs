@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace curator.Data
+namespace CuratorService.Data
 {
     internal class Setting : ISetting
     {

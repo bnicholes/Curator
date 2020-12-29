@@ -1,15 +1,13 @@
-﻿using curator.Data;
+﻿using CuratorService.Data;
 using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
-namespace curator.Database
+namespace CuratorService.Database
 {
-    public class CuratorDb : ICuratorDb, IDisposable
+    internal class CuratorDb : ICuratorDb, IDisposable
     {
         private bool _disposed;
 
@@ -87,17 +85,14 @@ namespace curator.Database
             return _imageCollection.FindAll();
         }
 
-        public void GetCuratedImage(string key)
+        public CuratedImage GetCuratedImage(string key)
         {
-            _imageCollection.FindById(key);
+            return _imageCollection.FindById(key);
         }
 
-        public void SaveCuratedImages(IEnumerable<CuratedImage> curatedImages)
+        public void SaveCuratedImage(CuratedImage curatedImage)
         {
-            foreach (var curatedImage in curatedImages)
-            {
-                _imageCollection.Upsert(curatedImage);
-            }
+            _imageCollection.Upsert(curatedImage);
         }
 
         public void DeleteCuratedImage(string key)

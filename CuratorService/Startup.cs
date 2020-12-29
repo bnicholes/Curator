@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using Autofac;
 using AutofacSerilogIntegration;
-using curator.Data;
-using curator.Database;
+using CuratorService.Data;
+using CuratorService.Database;
+using CuratorService.Logic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace curator
+namespace CuratorService
 {
     internal class Startup
     {
@@ -23,12 +24,14 @@ namespace curator
         private static readonly string ApiName = $"{ServiceName} API";
         private static readonly string ApiVersion = "v1";
         private static readonly string VersionApiName = $"{ApiName} {ApiVersion}";
-        private static readonly string ApiDescription = "Web API for curatoring photos from various sites.";
+        private static readonly string ApiDescription = "Web API for curating photos from various sites.";
 
-        private static readonly string RoutePrefix = "service/curator";
+        private static readonly string RoutePrefix = "service/CuratorService";
         private static readonly string SwaggerRoutePrefix = $"{RoutePrefix}/swagger";
         private static readonly string SwaggerRouteTemplate = $"/{SwaggerRoutePrefix}/{{documentName}}/swagger.json";
         private static readonly string OpenApiRelativeUrl = $"/{SwaggerRoutePrefix}/{ApiVersion}/swagger.json";
+
+        private readonly string enableCorsOrigins = "_enableCorsOrigins";
         
         public Startup(IWebHostEnvironment env)
         {
@@ -45,6 +48,15 @@ namespace curator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: enableCorsOrigins,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
+
             services.AddMvc()
                 .AddNewtonsoftJson(opts => opts.UseMemberCasing())
                 .AddMvcOptions(opts => { opts.EnableEndpointRouting = false; });
@@ -91,10 +103,10 @@ namespace curator
             services.AddSwaggerGenNewtonsoftSupport();
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = Path.Combine(WellKnownData.ServiceDirPath, "ClientApp/dist");
-            });
+//            services.AddSpaStaticFiles(configuration =>
+//            {
+//                configuration.RootPath = Path.Combine(WellKnownData.ServiceDirPath, "ClientApp/dist");
+//            });
         }
 
         // This only gets called if your environment is Development. The
@@ -110,7 +122,7 @@ namespace curator
         {
             builder.RegisterLogger();
             builder.Register(c => new CuratorDb()).As<ICuratorDb>().SingleInstance();
-//            builder.Register(c => new SafeguardLogic(c.Resolve<IConfigurationRepository>())).As<ISafeguardLogic>().SingleInstance();
+            builder.Register(c => new CuratorServiceLogic(c.Resolve<ICuratorDb>())).As<ICuratorServiceLogic>().SingleInstance();
 //            builder.Register(c => new PluginManager(c.Resolve<IConfigurationRepository>(), c.Resolve<ISafeguardLogic>())).As<IPluginManager>().SingleInstance();
 //            builder.Register(c => new PluginsLogic(c.Resolve<IConfigurationRepository>(), c.Resolve<IPluginManager>(), c.Resolve<ISafeguardLogic>())).As<IPluginsLogic>().SingleInstance();
 //            builder.Register(c => new MonitoringLogic(c.Resolve<IConfigurationRepository>(), c.Resolve<IPluginManager>())).As<IMonitoringLogic>().SingleInstance();
@@ -140,17 +152,18 @@ namespace curator
 
             app.UseExceptionHandler("/Error");
             app.UseHttpsRedirection();
-            //app.UseMvc();
+            app.UseCors(enableCorsOrigins);
+            app.UseMvc();
 
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-            });
+//            app.UseStaticFiles();
+//            app.UseSpaStaticFiles();
+//            app.UseSpa(spa =>
+//            {
+//                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+//                // see https://go.microsoft.com/fwlink/?linkid=864501
+//
+//                spa.Options.SourcePath = "ClientApp";
+//            });
         }
     }
 }

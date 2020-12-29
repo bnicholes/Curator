@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace curator.Logic
 {
-    public class CertificateHelper
+    internal class CertificateHelper
     {
         public static byte[] ConvertPemToData(string pem)
         {

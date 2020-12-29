@@ -1,13 +1,13 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using curator.Data;
 using curator.Logic;
+using CuratorService.Data;
 using Serilog;
 using Topshelf;
 using Topshelf.Runtime.DotNetCore;
 
-namespace curator
+namespace CuratorService
 {
     internal class Program
     {

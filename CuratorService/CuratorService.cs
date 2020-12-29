@@ -1,19 +1,17 @@
-﻿using curator.Data;
-using curator.Logic;
+﻿using curator.Logic;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
-using curator.Database;
+using CuratorService.Data;
+using CuratorService.Extensions;
+using CuratorService.Database;
 
-namespace curator
+namespace CuratorService
 {
     internal class CuratorService
     {
