@@ -1,0 +1,8 @@
+.sm-button{
+  width: 100px!important;
+  min-width: unset!important;
+}
+
+div.colored{
+  background-color: red;
+}

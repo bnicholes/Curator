@@ -1,0 +1,42 @@
+<div class="container">
+  <div [hidden]="submitted">
+    <h1 mat-dialog-title>Curated Item Form</h1>
+    <form (ngSubmit)="onSubmit(model)" #curatedItemForm="ngForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input matInput type="text" class="form-control" id="name"
+              required
+              [(ngModel)]="model.Name" name="name"
+              #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+              class="alert alert-danger">
+          Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input matInput type="text" class="form-control" id="description"
+              [(ngModel)]="model.Description" name="description">
+      </div>
+
+      <div class="form-group">
+        <label for="path">Path</label>
+        <input matInput type="text" class="form-control" id="path"
+              required
+              [(ngModel)]="model.Path" name="path"
+              #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+              class="alert alert-danger">
+          Path is required
+        </div>
+      </div>
+
+      <div mat-card-actions>
+        <button mat-button type="submit" class="btn btn-success" [disabled]="!curatedItemForm.form.valid" [mat-dialog-close]="model">Submit</button>
+        <button mat-button type="button" class="btn btn-primary" (click)="onNoClick()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

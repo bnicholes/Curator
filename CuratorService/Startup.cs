@@ -31,7 +31,7 @@ namespace CuratorService
         private static readonly string SwaggerRouteTemplate = $"/{SwaggerRoutePrefix}/{{documentName}}/swagger.json";
         private static readonly string OpenApiRelativeUrl = $"/{SwaggerRoutePrefix}/{ApiVersion}/swagger.json";
 
-        private readonly string enableCorsOrigins = "_enableCorsOrigins";
+        //private readonly string enableCorsOrigins = "_enableCorsOrigins";
         
         public Startup(IWebHostEnvironment env)
         {
@@ -48,14 +48,14 @@ namespace CuratorService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: enableCorsOrigins,
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(name: enableCorsOrigins,
+            //        builder =>
+            //        {
+            //            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            //        });
+            //});
 
             services.AddMvc()
                 .AddNewtonsoftJson(opts => opts.UseMemberCasing())
@@ -103,10 +103,12 @@ namespace CuratorService
             services.AddSwaggerGenNewtonsoftSupport();
 
             // In production, the Angular files will be served from this directory
-//            services.AddSpaStaticFiles(configuration =>
-//            {
-//                configuration.RootPath = Path.Combine(WellKnownData.ServiceDirPath, "ClientApp/dist");
-//            });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = Path.Combine(WellKnownData.ServiceDirPath, "ClientApp/dist/curator-gallery");
+            });
+
+            Log.Logger.Information($"Spa root path {Path.Combine(WellKnownData.ServiceDirPath, "ClientApp/dist/curator-gallery")}");
         }
 
         // This only gets called if your environment is Development. The
@@ -123,9 +125,6 @@ namespace CuratorService
             builder.RegisterLogger();
             builder.Register(c => new CuratorDb()).As<ICuratorDb>().SingleInstance();
             builder.Register(c => new CuratorServiceLogic(c.Resolve<ICuratorDb>())).As<ICuratorServiceLogic>().SingleInstance();
-//            builder.Register(c => new PluginManager(c.Resolve<IConfigurationRepository>(), c.Resolve<ISafeguardLogic>())).As<IPluginManager>().SingleInstance();
-//            builder.Register(c => new PluginsLogic(c.Resolve<IConfigurationRepository>(), c.Resolve<IPluginManager>(), c.Resolve<ISafeguardLogic>())).As<IPluginsLogic>().SingleInstance();
-//            builder.Register(c => new MonitoringLogic(c.Resolve<IConfigurationRepository>(), c.Resolve<IPluginManager>())).As<IMonitoringLogic>().SingleInstance();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -152,18 +151,18 @@ namespace CuratorService
 
             app.UseExceptionHandler("/Error");
             app.UseHttpsRedirection();
-            app.UseCors(enableCorsOrigins);
+            //app.UseCors(enableCorsOrigins);
             app.UseMvc();
 
-//            app.UseStaticFiles();
-//            app.UseSpaStaticFiles();
-//            app.UseSpa(spa =>
-//            {
-//                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-//                // see https://go.microsoft.com/fwlink/?linkid=864501
-//
-//                spa.Options.SourcePath = "ClientApp";
-//            });
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+            });
         }
     }
 }

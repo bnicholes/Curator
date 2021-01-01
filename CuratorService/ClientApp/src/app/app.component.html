@@ -1,0 +1,12 @@
+<div class="container">
+  <app-header [title]="title" (eventNewItem)="gotNewItem($event)"></app-header>
+</div>
+<div class="container">
+  <br>
+  <br>
+  <app-photo-gallery [eventNewItem]="eventNewItem.asObservable()"></app-photo-gallery>
+  <app-messages></app-messages>
+</div>
+<div>
+  <app-footer></app-footer>
+</div>

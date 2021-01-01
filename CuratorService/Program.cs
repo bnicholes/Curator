@@ -27,7 +27,7 @@ namespace CuratorService
                 .MinimumLevel.ControlledBy(LogLevelSwitcher.Instance.LogLevelSwitch)
                 .CreateLogger();
 
-            Console.WriteLine($"Safeguard Secrets Broker for DevOps logging to: {logDirPath}");
+            Console.WriteLine($"Curator Service logging to: {logDirPath}");
 
             HostFactory.Run(hostConfig =>
             {

@@ -1,0 +1,30 @@
+<div class="card-columns">
+  <div class="card" *ngFor="let item of curatedItems">
+    <img class="card-img-top" [src]="item.Path" [alt]="item.Name" />
+    <div class="card-body">
+      <h5 class="card-title">{{ item.Name }}</h5>
+      <p class="card-text">
+        Description {{ item.Description }}
+      </p>
+      <p class="card-text">{{ item.Name }}</p>
+      <hr>
+      <div class="container">
+        <div class="row">
+          <div class="col-7 align-self-center">
+            <small class="text-muted">{{ item.Key }}</small>
+          </div>
+          <div class="col-2.5">
+            <mat-card-actions>
+              <button mat-flat-button type="button" class="btn" style="font-size: 12px !important;" (click)="EditCuratedPhoto(item);">Edit</button>
+            </mat-card-actions>
+          </div>
+          <div class="col-2.5">
+            <mat-card-actions>
+              <button mat-flat-button type="button" class="btn" style="font-size: 12px !important;" (click)="RemoveCuratedPhoto(item);">Remove</button>
+            </mat-card-actions>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
